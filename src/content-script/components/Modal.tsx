@@ -1,3 +1,4 @@
+import { Box } from '@mui/material'
 const Modal = ({ children, setShow, show }: any) => {
   return (
     <div>
@@ -25,7 +26,15 @@ const Modal = ({ children, setShow, show }: any) => {
               }}
               onClick={setShow}
             >
-              <Icon />
+              <Box
+                sx={{
+                  '&:hover': {
+                    cursor: 'pointer',
+                  },
+                }}
+              >
+                <Icon />
+              </Box>
             </div>
           </div>
           <div

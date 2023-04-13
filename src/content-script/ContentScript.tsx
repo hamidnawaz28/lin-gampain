@@ -1,4 +1,4 @@
-import { Box, TextField } from '@mui/material'
+import { Box, TextField, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { campaignHeaders } from '../common/constants'
 import {
@@ -6,7 +6,7 @@ import {
   AddIconButton,
   Dialog as DialogContainer,
   Modal,
-  ProfileCard,
+  ProfileCard as ProfileCardContainer,
   ScrapingLoader,
   Table,
   Tabs,
@@ -216,7 +216,6 @@ const NewCampaign = () => {
     <Box>
       {!scraping && (
         <Box sx={{ display: 'flex', flexDirection: 'row', gridGap: 10, pt: 3 }}>
-          <AddIconButton onClick={showModalHandle} />
           <Modal setShow={showModalHandle} show={showModal}>
             <TextField
               size="small"
@@ -231,6 +230,14 @@ const NewCampaign = () => {
               variant="filled"
               value={title}
               onChange={titleChangeHandle}
+              maxRows={3}
+            />
+            <TextField
+              size="small"
+              label="Template (*)"
+              variant="filled"
+              value={title}
+              onChange={titleChangeHandle}
               multiline
               maxRows={3}
             />
@@ -238,12 +245,18 @@ const NewCampaign = () => {
           </Modal>
         </Box>
       )}
-
       <ScrapingLoader scraping={scraping} />
-      <Table headers={campaignHeaders} data={campaigns} />
+      <Typography>All Campaigns</Typography>
+      <AddIconButton onClick={showModalHandle} />
+      <Table
+        headers={campaignHeaders}
+        data={campaigns}
+        onEditClick={(data: any) => console.log(data)}
+        onDeleteClick={(data: any) => console.log(data)}
+      />
 
       <ActionButton onClick={handleNewCampaign} label={'Start'} />
-      <ProfileCard profiles={campaigns?.[0]?.profiles || []} onDelete={onDelete} />
+      <ProfileCardContainer profiles={campaigns?.[0]?.profiles || []} onDelete={onDelete} />
     </Box>
   )
 }

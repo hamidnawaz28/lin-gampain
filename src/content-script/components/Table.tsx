@@ -7,7 +7,25 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { useEffect, useState } from 'react'
-function DataTableRef({ headers, data }: any) {
+import { DeleteIconButton, EditIconButton } from './Buttons'
+
+const allComponents = (name: string, data: any, onEditClick: any, onDeleteClick: any) => {
+  if (name == 'edit') {
+    return <EditIconButton onClick={() => onEditClick(data)} />
+  }
+  if (name == 'delete') {
+    return <DeleteIconButton onClick={() => onDeleteClick(data)} />
+  }
+}
+const getCellData = (header: any, row: any, onEditClick: any, onDeleteClick: any) => {
+  if (header.type == 'value') {
+    return header?.valMap ? header.valMap(row[header.value]) : row[header.value]
+  }
+  if (header.type == 'component') {
+    return allComponents(header.component, row, onEditClick, onDeleteClick)
+  }
+}
+function DataTableRef({ headers, data, onEditClick, onDeleteClick }: any) {
   const display = true
   return display ? (
     <TableContainer component={Paper}>
@@ -26,10 +44,10 @@ function DataTableRef({ headers, data }: any) {
         <TableBody>
           {data.map((row: any, id: number) => (
             <TableRow key={id}>
-              {headers.map((el: any, key: number) => {
+              {headers.map((header: any, key: number) => {
                 return (
                   <TableCell align="center" key={key}>
-                    {el?.valMap ? el.valMap(row[el.value]) : row[el.value]}
+                    {getCellData(header, row, onEditClick, onDeleteClick)}
                   </TableCell>
                 )
               })}
@@ -41,7 +59,7 @@ function DataTableRef({ headers, data }: any) {
   ) : null
 }
 
-const DataTable = ({ headers, data }: any) => {
+const DataTable = ({ headers, data, onEditClick, onDeleteClick }: any) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [filteredData, setFilteredData] = useState([])
@@ -65,7 +83,12 @@ const DataTable = ({ headers, data }: any) => {
 
   return (
     <Box>
-      <DataTableRef headers={headers} data={filteredData} />
+      <DataTableRef
+        headers={headers}
+        data={filteredData}
+        onEditClick={onEditClick}
+        onDeleteClick={onDeleteClick}
+      />
       <TablePagination
         component="div"
         count={data.length}
